@@ -7,7 +7,12 @@ const products = [];
 
 // GET /admin/add-product
 router.get('/add-product', (req, res, next) => {
-  res.render('pugViews/add-product', { title: 'Add Products', path: '/admin/add-product' });
+  res.render('handlebarViews/add-product', {
+    title: 'Add Products',
+    path: '/admin/add-product',
+    formsCSS: true,
+    activeProduct: true
+  });
 });
 
 // POST /admin/add-product
