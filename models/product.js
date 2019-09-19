@@ -27,6 +27,8 @@ module.exports = class Product {
   };
 
   save() {
+    //  Adding this.propertyName adds to the class object
+    this.id = Math.random().toString();
     getProductsFromFile(products => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), err => {
@@ -39,6 +41,12 @@ module.exports = class Product {
     getProductsFromFile(cb);
   };
 
+  static findById(id, cb) {
+    getProductsFromFile(products => {
+      const product = products.find(p => p.id === id)
+      cb(product);
+    })
+  };
 };
 
 
@@ -48,3 +56,5 @@ module.exports = class Product {
   //  They tend to be utility functions
   //  Can't be called on instances of the class
 */
+
+// https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png
