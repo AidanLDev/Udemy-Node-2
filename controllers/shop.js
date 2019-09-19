@@ -6,8 +6,8 @@ const Product = require('../models/product');
 exports.getProducts = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop/product-list', {
-      products: products,
-      title: 'All Products',
+      prods: products,
+      pageTitle: 'All Products',
       path: '/products'
     });
   });
@@ -17,8 +17,8 @@ exports.getProducts = (req, res, next) => {
 exports.getIndex = (req, res, next) => {
   Product.fetchAll(products => {
     res.render('shop/index', {
-      products: products,
-      title: 'Shop',
+      prods: products,
+      pageTitle: 'Shop',
       path: '/'
     });
   });
@@ -27,7 +27,7 @@ exports.getIndex = (req, res, next) => {
 //  GET /cart
 exports.getCart = (req, res, next) => {
   res.render('shop/cart', {
-    title: 'Your Cart',
+    pageTitle: 'Your Cart',
     path: '/cart'
   });
 };
@@ -35,7 +35,7 @@ exports.getCart = (req, res, next) => {
 //  GET /orders
 exports.getOrders = (req, res, next) => {
   res.render('shop/orders', {
-    title: 'Your Orders',
+    pageTitle: 'Your Orders',
     path: '/orders'
   })
 }

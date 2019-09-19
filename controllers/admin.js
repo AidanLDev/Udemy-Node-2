@@ -3,7 +3,7 @@ const Product = require('../models/product');
 // GET /admin/add-product
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/add-product', {
-    title: 'Add Products',
+    pageTitle: 'Add Products',
     path: '/admin/add-product'
   });
 };
@@ -30,9 +30,9 @@ exports.postAddProduct = (req, res, next) => {
 exports.getAdminProducts = (req, res, next) => {
   Product.fetchAll(products =>
     res.render('admin/products', {
-      title: 'Admin Products',
+      pageTitle: 'Admin Products',
       path: '/admin/products',
-      products: products
+      prods: products
     })
   );
 };
