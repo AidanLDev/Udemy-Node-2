@@ -17,6 +17,7 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   const product = new Product(
+    null, //  Setting Id as null, as we are creating a new product here
     title,
     imageUrl,
     description,
@@ -27,7 +28,7 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect('/');
 };
 
-// GET /admin/edit-product
+// GET /admin/edit-product/:productId/?editing
 exports.getEditProduct = (req, res, next) => {
   const editMode = req.query.edit;
 
@@ -49,7 +50,25 @@ exports.getEditProduct = (req, res, next) => {
       product: product
     });
   });
+};
 
+//  POST /admin/edit-product
+exports.postEditProduct = (req, res, next) => {
+  const prodId         = req.body.productId;
+  const updatedTitle   = req.body.title;
+  const updatedPrice   = req.body.price;
+  const updatedImgUrl  = req.body.imageUrl;
+  const updatedDesc    = req.body.description;
+
+  const updatedProduct = new Product(
+    prodId,
+    updatedTitle,
+    updatedImgUrl,
+    updatedDesc,
+    updatedPrice
+  );
+  updatedProduct.save();
+  res.redirect('/admin/products');
 };
 
 //  GET /admin/products
@@ -62,3 +81,10 @@ exports.getAdminProducts = (req, res, next) => {
     })
   );
 };
+
+//  POST /admin/delete-product
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.deleteById(prodId);
+  res.redirect('/admin/products');
+}

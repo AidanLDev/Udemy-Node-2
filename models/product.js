@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const Cart = require('./cart');
+
 const p = path.join(
   path.dirname(process.mainModule.filename),
   'data',
@@ -10,51 +12,63 @@ const p = path.join(
 const getProductsFromFile = cb => {
   fs.readFile(p, (err, fileContent) => {
     if (err) {
-      return cb([]);
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
     }
-    //  If we don't parse, just a string will be returned 
-    cb(JSON.parse(fileContent));
   });
-}
+};
 
 module.exports = class Product {
-  constructor(title, imageUrl, description, price) {
-    //  Used to create an object
+  constructor(id, title, imageUrl, description, price) {
+    this.id = id;
     this.title = title;
-    this.imageUrl = imageUrl,
-    this.description = description,
-    this.price = price
-  };
+    this.imageUrl = imageUrl;
+    this.description = description;
+    this.price = price;
+  }
 
   save() {
-    //  Adding this.propertyName adds to the class object
-    this.id = Math.random().toString();
     getProductsFromFile(products => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), err => {
-        console.log(err);
-      })
+      if (this.id) {
+        const existingProductIndex = products.findIndex(
+          prod => prod.id === this.id
+        );
+        const updatedProducts = [...products];
+        updatedProducts[existingProductIndex] = this;
+        fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+          console.log(err);
+        });
+      } else {
+        this.id = Math.random().toString();
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), err => {
+          console.log(err);
+        });
+      }
+    });
+  }
+
+  static deleteById(id) {
+    getProductsFromFile(products => {
+      const product = products.find(prod => prod.id === id);
+      const updatedProducts = products.filter(prod => prod.id !== id);
+      fs.writeFile(p, JSON.stringify(updatedProducts), err => {
+        if (!err) {
+          Cart.deleteProduct(id, product.price);
+        }
+      });
     });
   }
 
   static fetchAll(cb) {
     getProductsFromFile(cb);
-  };
+  }
 
   static findById(id, cb) {
     getProductsFromFile(products => {
-      const product = products.find(p => p.id === id)
+      const product = products.find(p => p.id === id);
       cb(product);
-    })
-  };
+    });
+  }
 };
-
-
-/*
-  Static functions
-  //  static, call the method on the class istself, not instances of the class
-  //  They tend to be utility functions
-  //  Can't be called on instances of the class
-*/
-
-// https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png
