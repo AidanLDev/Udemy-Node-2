@@ -24,7 +24,10 @@ exports.postAddProduct = (req, res, next) => {
     price
   );
 
-  product.save();
+  product
+    .save()
+    .then(() => res.redirect("/"))
+    .catch(err => console.error(err));
   res.redirect("/");
 };
 
